@@ -1,2 +1,2 @@
-# ImageWhitelist
-Example plugin for whitelisting compute instance images across AWS, Microsoft Azure and gCP
+# AmiWhitelist
+Example plugin for whitelisting instance images
