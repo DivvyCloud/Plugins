@@ -80,9 +80,9 @@ _JOB_LOADED = False
 
 
 def load():
-    print 'wtf'
     global _JOB_LOADED
     try:
+	print __name__
         _JOB_LOADED = register_job_module(__name__)
     except AttributeError:
         pass
