@@ -1,18 +1,17 @@
 import boto3
 import json
 import logging
-from datetime import datetime
 
 import requests
 from DivvyCloudProviders.Common.Frontend.frontend import get_cloud_type_by_organization_service_id
 from DivvyDb.DivvyCloudGatewayORM import DivvyCloudGatewayORM
-from DivvyDb.DivvyDb import NewSession, SharedSessionScope
-from DivvyJobs.schedules import LazyScheduleGoal
-from DivvyPlugins.plugin_helpers import (register_job_module,
-                                         unregister_job_module)
+from DivvyDb.DivvyDb import NewSession
 from DivvyPlugins.plugin_jobs import PluginHarvester
 from DivvySession.DivvySession import EscalatePermissions
-from DivvyUtils import schedule
+
+from scheduler import client
+from worker.registry import Router
+
 
 import dbobjects
 
@@ -28,6 +27,7 @@ S3_BUCKET_NAME = 'bfexamples.botfactory.io'
 S3_BUCKET_REGION = 'us-east-1'
 FILE_KEY = 'approved_images.json'
 
+
 class ValidImageHarvester(PluginHarvester):
 
     def __init__(self):
@@ -39,22 +39,9 @@ class ValidImageHarvester(PluginHarvester):
         """
         super(ValidImageHarvester, self)._setup()
 
-    @classmethod
-    def get_harvest_schedule(cls, **job_creation_kwargs):
-        """ Sets frequency and worker queue """
-        return LazyScheduleGoal(
-            queue_name='DivvyCloudHarvest',
-            schedulable=schedule.Periodic(minutes=30)
-        )
-
-    @classmethod
-    def get_template_id(cls, **job_creation_kwargs):
-        """ This provides a unique name to the job """
-        return 'harvest-image-validation'
-
     def image_getter_unauth(self):
         """ My custom method for talking to Github """
-        response = requests.get(image_whitelist_url, timeout=10)
+        response = requests.get(IMAGE_WHITELIST_URL, timeout=10)
         return response.json()
 
     def image_getter_auth(self):
@@ -94,7 +81,6 @@ class ValidImageHarvester(PluginHarvester):
                             region_name=region_name,
                             image_id=image_id
                         ))
-
             else:
                 for region_name, image_ids in self.image_getter_unauth().items():
                     for image_id in image_ids:
@@ -107,29 +93,10 @@ class ValidImageHarvester(PluginHarvester):
         super(ValidImageHarvester, self)._cleanup()
 
 
-@SharedSessionScope(DivvyCloudGatewayORM)
-def list_job_templates():
-    # Only 1 job template for this job
-    job_templates = [
-        ValidImageHarvester.create_job_template(),
-    ]
-
-    return job_templates
-
-
-_JOB_LOADED = False
-
-
 def load():
-    global _JOB_LOADED
-    try:
-        _JOB_LOADED = register_job_module(__name__)
-    except AttributeError:
-        pass
+    Router.add_job(ValidImageHarvester)
+    client.add_periodic_job(ValidImageHarvester.__name__, args={}, interval=30)
 
 
 def unload():
-    global _JOB_LOADED
-    if _JOB_LOADED:
-        unregister_job_module(__name__)
-        _JOB_LOADED = False
+    pass
