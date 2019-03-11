@@ -1,7 +1,0 @@
-{
-  "initial_modules": [
-    "plugin.py",
-    "harvester.py",
-    "filters.py"
-  ]
-}

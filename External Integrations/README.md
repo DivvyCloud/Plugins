@@ -1,2 +1,1 @@
-# AmiWhitelist
-Example plugin for whitelisting instance images
+For external integrations
