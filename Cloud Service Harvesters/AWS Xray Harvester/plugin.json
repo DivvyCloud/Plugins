@@ -1,0 +1,7 @@
+{
+  "initial_modules": [
+    "plugin.py",
+    "xray_harvester.py",
+    "filters.py"
+  ]
+}
