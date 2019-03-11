@@ -18,7 +18,7 @@ import dbobjects
 logger = logging.getLogger('ValidImageHarvest')
 
 # Replace with the path to the JSON. Note that this is only used for unauthenticated
-# direct access. For direct access to S3 using authentication, use the values above.
+# direct access. For direct access to S3 using authentication, use the values below.
 IMAGE_WHITELIST_URL = 'https://s3.amazonaws.com/bfexamples.botfactory.io/approved_images.json'
 
 # Replace with Oranization service ID, bucket name, prefix and where to save the file
