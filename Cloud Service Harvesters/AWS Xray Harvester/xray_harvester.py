@@ -68,7 +68,7 @@ class XRayEncryptionConfigProcessor(PluginJob):
 
                     db.session.merge(DivvyDbObjects.ResourceProperty(
                         resource_id=resource_id,
-                        name='fidelity.xray_encryption_config_type',
+                        name='custom.xray_encryption_config_type',
                         value=encryption_type,
                         type_hint='string'
                     ))
