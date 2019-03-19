@@ -12,7 +12,7 @@ class metadata(PluginMetadata):
     last_updated_date = '2019-01-08'
     author = 'DivvyCloud'
     nickname = 'AWS Cloudwatch Publish'
-    default_language_description = 'Allows publishing a message to SNS as an action.'
+    default_language_description = 'Allows publishing a message to Cloudwatch as an action.'
     category = 'Actions'
     managed = False
 
