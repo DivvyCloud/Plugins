@@ -10,7 +10,7 @@ default_filters_author = 'Fidelity'
 
 
 @QueryRegistry.register(
-    query_id='fidelity.filter.xray_encryption_configuration_type',
+    query_id='custom.filter.xray_encryption_configuration_type',
     name='X-Ray Encryption Config Types',
     description=(
         'Returns the encryption configuration type used (default, KMS)'
@@ -38,7 +38,7 @@ def xray_encryption_configuration_type(query, db_cls, settings_config):
         db.session.query(
             DivvyDbObjects.ResourceProperty.resource_id
         ).filter(
-            DivvyDbObjects.ResourceProperty.name == 'fidelity.xray_encryption_config_type'
+            DivvyDbObjects.ResourceProperty.name == 'custom.xray_encryption_config_type'
         ).filter(
             DivvyDbObjects.ResourceProperty.value == settings_config['type']
         )))
