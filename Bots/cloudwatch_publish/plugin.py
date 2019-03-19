@@ -10,7 +10,7 @@ class metadata(PluginMetadata):
     """
     version = '1.1'
     last_updated_date = '2019-01-08'
-    author = 'Fannie Mae'
+    author = 'DivvyCloud'
     nickname = 'AWS SNS Publish'
     default_language_description = 'Allows publishing a message to SNS as an action.'
     category = 'Actions'
