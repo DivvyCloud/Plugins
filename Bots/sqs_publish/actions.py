@@ -71,7 +71,7 @@ def publish_to_sqs_queue(bot, settings, matches, _non_matches):
         raise ValueError('Unable to identify this message queue within DivvyCloud')
 
     message_queue_arn = settings['message_queue_arn']
-    region = message_queue_arn.split(':')[2]
+    region = message_queue_arn.split(':')[3]
     org_svc_id = org_svc_mapping.get(message_queue_arn)
     if not org_svc_id:
         raise ValueError('Unable to identify organization service ID')
@@ -79,19 +79,14 @@ def publish_to_sqs_queue(bot, settings, matches, _non_matches):
     backend = frontend.get_cloud_gw(region_name=region)
     client = backend.client('sqs')
 
-
     with ScheduledEventTracker() as context:
         for resource in matches:
             event = BotEvent('hookpoint', resource, bot.bot_id, bot.name)
             message = jinja2.Template(settings.get('message', ''))
-            response = client.send_message(
+            client.send_message(
                 QueueUrl=queue.url,
-                MessageBody=[{
-                    'message': message.render(event=event, resource=resource)
-                }],
-            )
-
-
+                MessageBody=message.render(event=event, resource=resource)
+             )
 
 def load():
     registry.load()
