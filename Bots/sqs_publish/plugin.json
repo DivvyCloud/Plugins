@@ -1,0 +1,6 @@
+{
+  "initial_modules": [
+    "plugin.py",
+    "actions.py"
+  ]
+}
